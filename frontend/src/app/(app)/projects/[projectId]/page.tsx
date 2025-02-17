@@ -40,7 +40,6 @@ import AssetUploadModal from "@/components/AssetUploadModal";
 import { AssetData } from "@/interfaces/assets";
 import AssetViewer from "@/components/AssetViewer";
 import Tooltip from "@/components/ui/Tooltip";
-import ChatBox from "@/components/ChatBox";
 import { BASE_STORAGE_URL } from "@/constants";
 import PageLoader from "@/components/ui/PageLoader";
 import toast from "react-hot-toast";
@@ -71,10 +70,6 @@ export default function Project() {
   const [uploadedFiles, setUploadedFiles] = useState<[string, Date][]>([]);
   const [openUploadModal, setOpenUploadModal] = useState<boolean>(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [messages, setMessages] = useState<
-    Array<{ sender: string; text: string; timestamp: Date }>
-  >([]);
-  const [chatEnabled, setChatEnabled] = useState<boolean>(false);
   const [processType, setProcessType] = useState<string | null>(null);
   const { ref, inView } = useInView();
 
@@ -136,7 +131,6 @@ export default function Project() {
   const projectTabs = [
     { id: "assets", label: "Docs" },
     { id: "processes", label: "Processes" },
-    { id: "chat", label: "Chat", badge: "beta" },
   ];
 
   const breadcrumbItems = [
@@ -440,15 +434,6 @@ export default function Project() {
           )}
           {activeTab === "processes" && (
             <ProcessesList projectId={project?.id} />
-          )}
-          {activeTab == "chat" && (
-            <ChatBox
-              project_id={project?.id}
-              messages={messages}
-              setMessages={setMessages}
-              chatEnabled={chatEnabled}
-              setChatEnabled={setChatEnabled}
-            />
           )}
 
           <Drawer
