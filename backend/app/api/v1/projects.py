@@ -23,7 +23,7 @@ project_router = APIRouter()
 logger = Logger()
 
 
-@project_router.post("/", status_code=201)
+@project_router.post("", status_code=201)
 def create_project(project: ProjectCreate, db: Session = Depends(get_db)):
     if not project.name.strip():
         raise HTTPException(
@@ -38,7 +38,7 @@ def create_project(project: ProjectCreate, db: Session = Depends(get_db)):
     }
 
 
-@project_router.get("/")
+@project_router.get("")
 def get_projects(
     page: int = Query(1, ge=1),
     page_size: int = Query(100, ge=1, le=100),

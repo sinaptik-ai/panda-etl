@@ -8,10 +8,12 @@ export async function middleware(request: NextRequest) {
   try {
     apiKey = await GetAPIKey();
   } catch (error) {
+    console.error("Error fetching API key:", error);
     return NextResponse.redirect(new URL("/api-key-setup", request.url));
   }
 
   if (!apiKey && !request.nextUrl.pathname.startsWith("/api-key-setup")) {
+    console.log("No API key found. Redirecting to /api-key-setup");
     return NextResponse.redirect(new URL("/api-key-setup", request.url));
   }
 
