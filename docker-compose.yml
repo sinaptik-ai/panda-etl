@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: panda-etl-backend
+    ports:
+      - "5328:5328"
+    volumes:
+      - ./instance:/app/instance
+      - ./uploads:/app/uploads
+      - ./processed:/app/processed
+    environment:
+      - ENV=production
+    restart: unless-stopped
+    command: >
+      sh -c "poetry run alembic upgrade head && poetry run uvicorn app.main:app --host 0.0.0.0 --port 5328"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: panda-etl-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - backend
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
