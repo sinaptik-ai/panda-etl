@@ -43,7 +43,8 @@ def process_segmentation(project_id: int, asset_id: int, asset_file_name: str):
 
         vectorstore.add_docs(
             docs=docs,
-            metadatas=metadatas
+            metadatas=metadatas,
+            batch_size=100
         )
 
         project_repository.update_asset_content_status(
@@ -67,6 +68,7 @@ def preprocess_file(asset_id: int):
         # Get asset details from the database first
         with SessionLocal() as db:
             asset = project_repository.get_asset(db=db, asset_id=asset_id)
+
             if asset is None:
                 logger.error(f"Asset with id {asset_id} not found in the database")
                 return

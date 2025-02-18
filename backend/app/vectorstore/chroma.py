@@ -101,25 +101,16 @@ class ChromaDB(VectorStore):
         filename = metadatas[0].get('filename', 'unknown')
         logger.info(f"Adding {len(docs)} sentences to the vector store for file {filename}")
 
-        # If using OpenAI embeddings, add all documents at once
-        if self.settings.use_openai_embeddings and self.settings.openai_api_key:
-            logger.info("Using OpenAI embeddings")
-            self._docs_collection.add(
-                documents=list(docs),
-                metadatas=metadatas,
-                ids=ids,
-            )
-        else:
-            logger.info("Using default embedding function")
-            batch_size = batch_size or self._batch_size
+        # Batching the document processing
+        batch_size = batch_size or self._batch_size
 
-            for i in range(0, len(docs), batch_size):
-                logger.info(f"Processing batch {i} to {i + batch_size}")
-                self._docs_collection.add(
-                    documents=docs[i : i + batch_size],
-                    metadatas=metadatas[i : i + batch_size],
-                    ids=ids[i : i + batch_size],
-                )
+        for i in range(0, len(docs), batch_size):
+            logger.info(f"Processing batch {i} to {i + batch_size}")
+            self._docs_collection.add(
+                documents=docs[i : i + batch_size],
+                metadatas=metadatas[i : i + batch_size],
+                ids=ids[i : i + batch_size],
+            )
 
         return list(ids)
 
