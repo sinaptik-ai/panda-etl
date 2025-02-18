@@ -42,7 +42,6 @@ def save_user_api_key(
         raise HTTPException(
             status_code=400, detail="Invalid API Key"
         )
-
     user_repository.update_user_api_key(db, users[0].id, api_key_request.api_key)
 
     return {

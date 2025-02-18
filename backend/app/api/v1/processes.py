@@ -61,7 +61,7 @@ def get_process(process_id: int, db: Session = Depends(get_db)):
     }
 
 
-@process_router.get("/")
+@process_router.get("")
 def get_processes(db: Session = Depends(get_db)):
     processes = process_repository.get_processes(db=db)
 
