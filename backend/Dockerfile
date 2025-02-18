@@ -2,11 +2,6 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
 # Install Poetry
 RUN pip install poetry
 
@@ -18,9 +13,6 @@ RUN poetry config virtualenvs.create false
 
 # Install dependencies
 RUN poetry install
-
-# run migrations
-RUN make migrate
 
 # Expose the port the app runs on
 EXPOSE 8000
