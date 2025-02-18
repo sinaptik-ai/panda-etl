@@ -3,16 +3,24 @@ import type { NextRequest } from "next/server";
 import localStorage from "@/lib/localStorage";
 import { APIKeyData } from "./interfaces/user";
 import axios from "axios";
+import { GetAPIKey } from "./services/user";
 
 export async function middleware(request: NextRequest) {
   let apiKey = null;
   try {
-    // Hardcoded for now for the docker
-    const response = await axios.get<{ data: APIKeyData }>(
-      `http://backend:5328/v1/user/get-api-key`
-    );
+    const envApiKey = process.env.NEXT_PUBLIC_API_KEY;
+    const dockerBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-    apiKey = { data: { api_key: response.data.data.key } };
+    if (envApiKey) {
+      apiKey = { data: { api_key: envApiKey } };
+    } else if (dockerBackendUrl) {
+      const response = await axios.get<{ data: APIKeyData }>(
+        `${dockerBackendUrl}/v1/user/get-api-key`
+      );
+      apiKey = { data: { api_key: response.data.data.key } };
+    } else {
+      apiKey = await GetAPIKey();
+    }
   } catch (error) {
     console.error("Error fetching API key:", error);
     return NextResponse.redirect(new URL("/api-key-setup", request.url));
