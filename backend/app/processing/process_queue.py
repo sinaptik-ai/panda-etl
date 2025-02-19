@@ -406,4 +406,4 @@ def vectorize_extraction_process_step(project_id: int, process_step_id: int, fil
     ]
 
     # Add documents to vectorstore
-    vectorstore.add_docs(docs=docs, metadatas=metadatas)
+    vectorstore.add_docs(docs=docs, metadatas=metadatas, batch_size=100)
