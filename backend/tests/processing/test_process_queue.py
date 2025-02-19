@@ -216,7 +216,7 @@ def test_vectorize_extraction_process_step_single_reference(mock_chroma_db):
     mock_vectorstore.add_docs.assert_called_once_with(
         docs=expected_docs,
         metadatas=expected_metadatas,
-        batch_size=100
+        batch_size=5
     )
 
 @patch('app.processing.process_queue.ChromaDB')
@@ -263,7 +263,7 @@ def test_vectorize_extraction_process_step_multiple_references_concatenation(moc
     mock_vectorstore.add_docs.assert_called_once_with(
         docs=expected_docs,
         metadatas=expected_metadatas,
-        batch_size=100
+        batch_size=5
     )
 
 @patch('app.processing.process_queue.ChromaDB')  # Replace with the correct module path

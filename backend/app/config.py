@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
+from typing import Optional
 
 # Load environment variables from .env file
 load_dotenv()
@@ -29,6 +30,9 @@ class Settings(BaseSettings):
     # Extraction References for chat
     chat_extraction_doc_threshold: float = 0.5
     chat_extraction_max_docs: int = 50
+
+    # PandaETL api key
+    pandaetl_api_key: Optional[str] = None
 
     class Config:
         env_file = ".env"

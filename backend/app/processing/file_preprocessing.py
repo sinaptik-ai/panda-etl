@@ -44,7 +44,7 @@ def process_segmentation(project_id: int, asset_id: int, asset_file_name: str):
         vectorstore.add_docs(
             docs=docs,
             metadatas=metadatas,
-            batch_size=100
+            batch_size=settings.chroma_batch_size
         )
 
         project_repository.update_asset_content_status(
