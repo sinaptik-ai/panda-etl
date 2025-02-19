@@ -48,8 +48,7 @@ PandaETL is an open-source, no-code ETL (Extract, Transform, Load) tool designed
 3. Create a `.env` file in the frontend directory with the following:
 
    ```bash
-   NEXT_PUBLIC_API_URL=http://localhost:3000/api/v1
-   NEXT_PUBLIC_STORAGE_URL=http://localhost:3000/api/assets
+   NEXT_PUBLIC_API_URL=http://localhost:3000
    ```
 
    or copy the `.env.example` file to `.env`

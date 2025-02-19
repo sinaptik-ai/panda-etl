@@ -11,6 +11,7 @@ export async function middleware(request: NextRequest) {
     const dockerBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
     if (dockerBackendUrl) {
+      console.log(dockerBackendUrl);
       const response = await axios.get<{ data: APIKeyData }>(
         `${dockerBackendUrl}/v1/user/get-api-key`
       );
