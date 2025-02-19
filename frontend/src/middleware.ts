@@ -8,12 +8,9 @@ import { GetAPIKey } from "./services/user";
 export async function middleware(request: NextRequest) {
   let apiKey = null;
   try {
-    const envApiKey = process.env.NEXT_PUBLIC_API_KEY;
     const dockerBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-    if (envApiKey) {
-      apiKey = { data: { api_key: envApiKey } };
-    } else if (dockerBackendUrl) {
+    if (dockerBackendUrl) {
       const response = await axios.get<{ data: APIKeyData }>(
         `${dockerBackendUrl}/v1/user/get-api-key`
       );
