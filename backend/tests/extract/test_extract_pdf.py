@@ -52,18 +52,15 @@ def test_extract_success(
     mock_db,
 ):
     """Test successful extraction of fields"""
-    mock_asset = MagicMock(id=1, project_id=1, path="/path/to/file.pdf")
+    mock_asset = MagicMock(id=1, project_id=1, path=None)
     mock_get_asset.return_value = mock_asset
     mock_get_user_api_key.return_value = MagicMock(key="fake_api_key")
     mock_get_asset_content.return_value = MagicMock(
         content={"content": ["Page 1 content", "Page 2 content"]}
     )
-    mock_extract_data.return_value = {
-        "fields": {
-            "extracted_field1": "value1",
-            "extracted_field2": "value2",
-        }
-    }
+    mock_extract_data.return_value = MagicMock(
+        fields={"extracted_field1": "value1", "extracted_field2": "value2"}
+    )
 
     response = client.post("/v1/extract/1", json=extract_fields.dict())
 
@@ -81,12 +78,12 @@ def test_extract_success(
         api_token="fake_api_key",
         fields=extract_fields.dict(),
         file_path=None,
-        pdf_content="Page 1 content\nPage 2 content",
+        pdf_content=None,
     )
 
 
 @patch("app.repositories.project_repository.get_asset")
-def test_extract_asset_permission_error(mock_get_asset, extract_fields, mock_db):
+def test_extract_asset_permission_error( mock_get_asset, extract_fields, mock_db):
     """Test extraction with asset permission error"""
     mock_asset = MagicMock(id=1, project_id=2)
     mock_get_asset.return_value = mock_asset

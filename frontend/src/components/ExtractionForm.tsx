@@ -21,6 +21,7 @@ import { ExtractionField } from "@/interfaces/extract";
 import AddFieldsAIDrawer from "./AddFieldsAIDrawer";
 import { Card } from "@/components/ui/Card";
 import Switch from "./ui/Switch";
+import toast from "react-hot-toast";
 
 const FIELD_TYPES = ["text", "number", "date", "list"] as const;
 
@@ -130,6 +131,9 @@ export default function ExtractionForm({
     try {
       await onSubmit(fields);
     } catch (error) {
+      toast.error(
+        "The file isn't ready for preview yet, preprocessing is in progress."
+      );
       console.error("Error submitting form:", error);
     } finally {
       setIsLoading(false);
