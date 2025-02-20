@@ -50,7 +50,12 @@ async def extract(
         asset_content = project_repository.get_asset_content(db, asset_id=asset.id)
 
         if asset_content:
-            asset_content = "\n".join(asset_content.content["content"])
+
+            asset_content = (
+                "\n".join(item["text"] for item in asset_content.content.get("content", []) if "text" in item)
+                if asset_content.content
+                else None
+            )
 
         data = extract_data(
             api_token=api_key.key,
@@ -62,7 +67,7 @@ async def extract(
         return {
             "status": "success",
             "message": "Data extracted successfully from the file.",
-            "data": data["fields"],
+            "data": data.fields,
         }
 
     except HTTPException:

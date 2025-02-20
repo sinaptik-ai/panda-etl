@@ -210,45 +210,46 @@ def handle_exceptions(func):
 @handle_exceptions
 def extract_process(api_key, process, process_step, asset_content):
     pdf_content = ""
-    vectorstore = ChromaDB(f"panda-etl-{process.project_id}", similarity_threshold=3)
-    if (
-        ("multiple_fields" not in process.details or not process.details["multiple_fields"])
-        and asset_content.content
-        and asset_content.content.get("word_count", 0) > 500
-    ):
-        for field in process.details["fields"]:
-            relevant_docs = vectorstore.get_relevant_docs(
-                field["key"],
-                where={
-                    "$and": [
-                        {"asset_id": process_step.asset.id},
-                        {"project_id": process.project_id},
-                    ]
-                },
-                k=5,
-            )
+    # TODO - Disable Vector store pdf content fetching temporarily until fixed.
+    # vectorstore = ChromaDB(f"panda-etl-{process.project_id}", similarity_threshold=3)
+    # if (
+    #     ("multiple_fields" not in process.details or not process.details["multiple_fields"])
+    #     and asset_content.content
+    #     and asset_content.content.get("word_count", 0) > 500
+    # ):
+    #     for field in process.details["fields"]:
+    #         relevant_docs = vectorstore.get_relevant_docs(
+    #             field["key"],
+    #             where={
+    #                 "$and": [
+    #                     {"asset_id": process_step.asset.id},
+    #                     {"project_id": process.project_id},
+    #                 ]
+    #             },
+    #             k=5,
+    #         )
 
-            for index, metadata in enumerate(relevant_docs["metadatas"][0]):
-                segment_data = [relevant_docs["documents"][0][index]]
-                if metadata.get("previous_sentence_id", -1) != -1:
-                    prev_sentence = vectorstore.get_relevant_docs_by_id(
-                        ids=[metadata["previous_sentence_id"]]
-                    )
-                    if prev_sentence["documents"] and len(prev_sentence["documents"][0]) > 0:
-                        segment_data = [prev_sentence["documents"][0]] + segment_data
-                    else:
-                        logger.warning("Previous sentence document is empty.")
+    #         for index, metadata in enumerate(relevant_docs["metadatas"][0]):
+    #             segment_data = [relevant_docs["documents"][0][index]]
+    #             if metadata.get("previous_sentence_id", -1) != -1:
+    #                 prev_sentence = vectorstore.get_relevant_docs_by_id(
+    #                     ids=[metadata["previous_sentence_id"]]
+    #                 )
+    #                 if prev_sentence["documents"] and len(prev_sentence["documents"][0]) > 0:
+    #                     segment_data = [prev_sentence["documents"][0]] + segment_data
+    #                 else:
+    #                     logger.warning("Previous sentence document is empty.")
 
-                if metadata.get("next_sentence_id", -1) != -1:
-                    next_sentence = vectorstore.get_relevant_docs_by_id(
-                        ids=[metadata["next_sentence_id"]]
-                    )
-                    if next_sentence["documents"] and len(next_sentence["documents"][0]) > 0:
-                        segment_data.append(next_sentence["documents"][0])
-                    else:
-                        logger.warning("Next sentence document is empty.")
+    #             if metadata.get("next_sentence_id", -1) != -1:
+    #                 next_sentence = vectorstore.get_relevant_docs_by_id(
+    #                     ids=[metadata["next_sentence_id"]]
+    #                 )
+    #                 if next_sentence["documents"] and len(next_sentence["documents"][0]) > 0:
+    #                     segment_data.append(next_sentence["documents"][0])
+    #                 else:
+    #                     logger.warning("Next sentence document is empty.")
 
-                pdf_content += "\n" + " ".join(segment_data)
+    #             pdf_content += "\n" + " ".join(segment_data)
 
     if not pdf_content:
         pdf_content = (
